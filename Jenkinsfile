@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        K8S_PORT = 55673
+        K8S_PORT = 59064
     }
     stages {
         stage('Deploy on k8s') {
