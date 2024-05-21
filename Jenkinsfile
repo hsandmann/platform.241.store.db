@@ -4,6 +4,19 @@ pipeline {
         K8S_PORT = 51971
     }
     stages {
+        stage('Deploy on MicroK8s') {
+            when { 
+                environment name: 'MicroK8s', value: 'true'
+            }
+            steps {
+                sh "microk8s kubectl apply -f ./k8s/configmap.yaml"
+                sh "microk8s kubectl apply -f ./k8s/credentials.yaml"
+                sh "microk8s kubectl apply -f ./k8s/pv.yaml"
+                sh "microk8s kubectl apply -f ./k8s/pvc.yaml"
+                sh "microk8s kubectl apply -f ./k8s/deployment.yaml"
+                sh "microk8s kubectl apply -f ./k8s/service.yaml"
+            }
+        }
         stage('Deploy on k8s') {
             steps {
                 withCredentials([ string(credentialsId: 'minikube-credential', variable: 'api_token') ]) {
